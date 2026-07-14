@@ -1,0 +1,1 @@
+export const contactEmail = 'nullitystudio1@gmail.com'
