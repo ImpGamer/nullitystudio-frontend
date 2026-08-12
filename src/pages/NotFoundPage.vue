@@ -1,8 +1,78 @@
 <template>
-    <div class="main-conatainer vertical-container b-padding mid-aligner m-separator">
-        <p class="title-font">404</p>
-        <img class="general-image" src="https://res.cloudinary.com/dtohisibj/image/upload/ths_1_sticker_nyph4w.png" />
+    <div class="hero">
+        <div class="hero-inner">
+            <Logo />
+            <p class="eyebrow no-signal">Lost Signal</p>
 
-        <p class="title-font">Page Not Found</p>
+            <h3 class="glitch-text" data-text="404">404</h3>
+            <strong>This channel does not transmit anything</strong>
+            <p>The page you are looking for does not exist, has been moved, or has never been here. Check the address or
+                return to a known channel.</p>
+
+            <div class="btn-container">
+                <router-link class="btn btn-solid" to="/home">
+                    Return to Home
+                </router-link>
+                <router-link class="btn" :to="{ path: '/games', hash: '#catalog' }">
+                    See our Catalog
+                </router-link>
+            </div>
+            <span>[ NO SIGNAL // CH 404 ]</span>
+        </div>
     </div>
 </template>
+
+<script setup>
+import Logo from '@components/Logo.vue';
+</script>
+<style scoped>
+.hero-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 7vw 18vw;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(10.5rem, 18vw, 16rem);
+    line-height: .95;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+span {
+    font-family: var(--font-mono);
+    font-size: .75rem;
+    color: var(--muted);
+}
+
+p {
+    max-width: 65ch;
+    font-size: .9rem;
+    line-height: 1.7;
+}
+
+strong {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+}
+.btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
+    gap: 1rem;
+
+    margin-top: 20px;
+}
+</style>
