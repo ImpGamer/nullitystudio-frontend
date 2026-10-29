@@ -1,14 +1,29 @@
 <script setup lang="ts">
 import { IconMenu2 } from '@tabler/icons-vue';
 import Logo from '@components/Logo.vue';
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { formatNumber } from '@utils/functions';
+import { useRetriableRequest } from '@/composables/useRetriableRequest';
+import { useConfigStore } from '@/stores/config';
+import type { SocialAccount } from '@/types/config';
+import { getIconPlatform } from '@/config/platforms.config';
 
 const mobileNav = ref<HTMLElement | null>(null)
 function toggleMobileNav() {
     mobileNav.value?.classList.toggle('no-display')
 }
+const configStore = useConfigStore()
 
+const socials = ref<SocialAccount[]>([]);
+const { run: loadSocials } = useRetriableRequest(
+    () => configStore.get('socials'),
+    {
+        onSuccess: (response) => socials.value = response.accounts
+    }
+)
+onMounted(async () => void loadSocials());
+
+const year = computed(() => new Date().getFullYear())
 const navElements = [
     {
         name: 'Home',
@@ -22,7 +37,8 @@ const navElements = [
     },
     {
         name: 'News',
-        path: '/news/-1',
+        path: '/news',
+        hash: 'catalog'
     },
     {
         name: 'About Us',
@@ -73,10 +89,19 @@ const completeElements = [
                 <div class="space-between">
                     <p class="eyebrow"> CH 00 - Menu</p>
                     <div class="social-container">
-                        <a class="locked-hover">X</a>
-                        <a class="locked-hover">X</a>
-                        <a class="locked-hover">X</a>
-                        <a class="locked-hover">X</a>
+                        <a v-for="social in socials" 
+                        :key="social.key"
+                        class="locked-hover"
+                        :style="{ '--social-color': social.color }"
+                        :href="social.url"
+                        target="_blank"
+                        :title="social.name">
+                            <span class="social-icon">
+                                <span class="social-glow" aria-hidden="true"></span>
+                                <component :is="getIconPlatform(social.key)"
+                                stroke="2"/>
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -113,14 +138,23 @@ const completeElements = [
             <div class="footer-top">
                 <Logo/>
                 <div class="social-container">
-                    <a class="locked-hover">X</a>
-                    <a class="locked-hover">X</a>
-                    <a class="locked-hover">X</a>
-                    <a class="locked-hover">X</a>
+                    <a v-for="social in socials" 
+                        :key="social.key"
+                        class="locked-hover"
+                        :style="{ '--social-color': social.color }"
+                        :href="social.url"
+                        target="_blank"
+                        :title="social.name">
+                            <span class="social-icon">
+                                <span class="social-glow" aria-hidden="true"></span>
+                                <component :is="getIconPlatform(social.key)"
+                                stroke="2"/>
+                            </span>
+                        </a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <span>© 2026 Nullity Studio. All Rights reserved.</span>
+                <span>© {{ year }} Nullity Studio. All Rights reserved.</span>
                 <span class="no-signal">[ NO SIGNAL // END OF TRANSMISSION ]</span>
             </div>
         </div>
@@ -356,6 +390,57 @@ header {
     flex-wrap: wrap;
     flex-direction: row;
     gap: 14px;
+}
+
+.social-container > .locked-hover {
+    --social-color: var(--purple);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    transition: color .2s ease;
+}
+
+.social-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    isolation: isolate;
+}
+
+/* Halo diagonal hacia la derecha: 70% del icono con el color de la red. */
+.social-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--social-color) 70%, transparent) 0%,
+        color-mix(in srgb, var(--social-color) 70%, transparent) 70%,
+        transparent 100%
+    );
+    filter: blur(5px);
+    opacity: 0;
+    transform: translateX(-12%) skewY(-6deg) scale(.95);
+    transition: opacity .22s ease, transform .22s ease;
+    pointer-events: none;
+}
+
+.social-container > .locked-hover:hover .social-glow,
+.social-container > .locked-hover:focus-visible .social-glow {
+    opacity: 1;
+    transform: translateX(10%) skewY(-6deg) scale(1.08);
+}
+
+.social-container > .locked-hover:hover,
+.social-container > .locked-hover:hover * {
+    color: color-mix(in srgb, var(--social-color) 70%, var(--text));
+}
+
+.social-container > .locked-hover:hover::before,
+.social-container > .locked-hover:hover::after {
+    color: var(--social-color);
 }
 
 @media (width < 1100px) {
