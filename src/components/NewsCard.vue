@@ -3,26 +3,26 @@
         <div class="news-meta">
             <span>{{ date }}</span>
             <div>
-                <span v-for="t in news.tags"
+                <span v-for="t in cutTags"
                 class="tag">
                     {{ t }}
                 </span>
             </div>
         </div>
         <h3>{{ news.title }}</h3>
-        <p>{{ tText }}</p>
+        <p>{{ news.previewText }}</p>
         <router-link :to="{
-            name: 'news',
+            name: 'news-detail',
             params: {
                 id: news.id
             }
         }" 
-        class="link">Read Note →</router-link>
+        class="discrete-link">Read Note →</router-link>
     </div>
 </template>
 
 <script setup lang="ts">
-import type { News } from '@utils/interfaces';
+import { News } from '@/types/news';
 import { formatDate } from '@utils/functions';
 import { computed } from 'vue';
 
@@ -30,8 +30,8 @@ const props = defineProps<{
     news: News
 }>()
 
-const date = computed(() => formatDate(props.news.date))
-const tText = computed(() => `${props.news.text.slice(0, 100)}...`)
+const date = computed(() => formatDate(props.news.createdAt))
+const cutTags = computed(() => props.news.tags.slice(0, 3))
 </script>
 
 <style scoped>
@@ -42,6 +42,7 @@ const tText = computed(() => `${props.news.text.slice(0, 100)}...`)
     display: flex;
     flex-direction: column;
     gap: 17px;
+    justify-content: space-between;
     width: 100%;
     transition: border-color .25s ease, transform .25s ease;
 }
