@@ -29,8 +29,6 @@
 </template>
 <script setup>
 import Logo from '@components/Logo.vue'
-import PasswordInputComponent from '@components/PasswordInputComponent.vue'
-import ButtonComponent from '@components/ButtonComponent.vue'
 import { reactive, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 

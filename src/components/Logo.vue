@@ -1,33 +1,27 @@
 <template>
-  <router-link to="/home">
-    <img src="/images/static/studio_logo.webp" class="logo" :style="{ margin: margin }"/>
-  </router-link>
+  <div class="brand">
+    <img src="/src/assets/images/static/studio_logo.webp" alt="studio_logo"/>
+    <span>NULLITY STUDIO</span>
+  </div>
 </template>
 
-<script setup>
-defineProps({
-    margin: {
-        type: String,
-        default: '1rem'
-    }
-})
-</script>
-
 <style>
-.logo {
-  width: 45vw;
-  height: auto;
-
-  max-width: 450px;
-  max-height: 350px;
-
-  object-fit: contain;
+.brand {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
 }
 
-@media (width < 970px) {
-  .logo {
-    width: 65vw;
-    max-width: 280px;
-  }
+.brand img {
+    max-width: 40px;
+    max-height: 40px;
+}
+
+.brand span {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: .06em;
 }
 </style>
