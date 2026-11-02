@@ -1,6 +1,6 @@
 <template>
   <div class="brand">
-    <img src="/public/images/static/studio_logo.webp" alt="studio_logo"/>
+    <img src="/src/assets/images/static/studio_logo.webp" alt="studio_logo"/>
     <span>NULLITY STUDIO</span>
   </div>
 </template>

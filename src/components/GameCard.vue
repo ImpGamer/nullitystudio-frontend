@@ -2,83 +2,29 @@
     <router-link 
     class="game-card" 
     :to="`/game?id=${props.game.id}`">
-        <div v-if="props.game" class="game-art">
+        <div class="game-art">
             <img :src="props.game.cover" />
-            <span class="game-status">{{ statusInfo.name }}</span>
-        </div>
-        <div v-else class="game-art">
-            <canvas ref="canvasRef"></canvas>
-            <span class="game-status">{{ statusInfo.name }}</span>
-            <span class="mark">[N]</span>
+            <span class="game-status">{{ props.game.status.name }}</span>
         </div>
         <div class="body-card">
             <div class="tags-container">
-                <span v-for="t in props.game.tags" class="tag">{{ t }}</span>
+                <span v-for="t in showedTags" class="tag">{{ t }}</span>
             </div>
             <h3>{{ props.game.title }}</h3>
-            <p>{{ props.game.description }}</p>
+            <p>{{ props.game.shortDescription }}</p>
         </div>
     </router-link>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
-import { getStatusInfo } from '@config/gameStatus';
-import type { Game, GameStatusInfo } from '@utils/interfaces';
+import type { Game } from '@/types/game';
+import { computed } from 'vue';
 
 const props = defineProps<{
     game: Game
 }>()
 
-const statusInfo: GameStatusInfo = getStatusInfo(props.game.status);
-const canvasRef = ref<HTMLCanvasElement | null>(null);
-let rafId:number = 0;
-let lastPaint = 0;
-
-function paintNoise(canvas: HTMLCanvasElement | null) {
-    if(!canvas) {
-        console.error('Canvas element is not available on gameCard');
-        return;
-    }
-
-    const ctx = canvas.getContext('2d');
-    if(!ctx) return;
-    const w = canvas.width, h = canvas.height;
-    const imageData = ctx.createImageData(w, h);
-    const c = [192, 57, 249];
-
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        const v = Math.random() * 22;
-        const bias = Math.random() < 0.02 ? 1 : 0.12;
-        imageData.data[i] = 10 + v * 0.3 + c[0] * bias;
-        imageData.data[i + 1] = 10 + v * 0.3 + c[1] * bias;
-        imageData.data[i + 2] = 14 + v * 0.3 + c[2] * bias;
-        imageData.data[i + 3] = 255;
-    }
-    ctx.putImageData(imageData, 0, 0);
-}
-
-function loop(timestamp:number) {
-    if (timestamp - lastPaint > 220) {
-        paintNoise(canvasRef.value);
-        lastPaint = timestamp;
-    }
-    rafId = requestAnimationFrame(loop);
-}
-
-onMounted(() => {
-    if (!canvasRef.value) return;
-
-    paintNoise(canvasRef.value);
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!prefersReducedMotion) {
-        rafId = requestAnimationFrame(loop);
-    }
-});
-
-onUnmounted(() => {
-    if (rafId) cancelAnimationFrame(rafId);
-});
+const showedTags = computed(() => props.game.tags.slice(0,4))
 </script>
 
 <style scoped>
@@ -97,7 +43,7 @@ onUnmounted(() => {
 }
 
 .game-card:hover {
-    border-color: v-bind('statusInfo.color');
+    border-color: v-bind('props.game.status.color');
     transform: translateY(-3px);
     cursor: pointer;
 }
@@ -122,7 +68,7 @@ onUnmounted(() => {
     font-weight: 500;
     font-size: 1.5em;
     letter-spacing: 1.1;
-    line-height: 0.9;
+    line-height: 1.1;
 }
 .body-card p {
     line-clamp: 3;
@@ -132,7 +78,7 @@ onUnmounted(() => {
     font-family: var(--font-mono);
     color: var(--muted);
     letter-spacing: 0.98;
-    line-height: 0.97;
+    line-height: 1.5;
 }
 .game-art canvas,
 .game-art img {
@@ -152,8 +98,8 @@ onUnmounted(() => {
     text-transform: uppercase;
     padding: 5px 9px;
     background: rgba(8, 8, 11, .8);
-    border: 1px solid v-bind('statusInfo.color');
-    color: v-bind('statusInfo.color');
+    border: 1px solid v-bind('props.game.status.color');
+    color: v-bind('props.game.status.color');
 }
 
 .mark {

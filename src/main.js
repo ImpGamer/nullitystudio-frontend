@@ -5,6 +5,7 @@ import "vue-toastification/dist/index.css";
 
 import App from './App.vue'
 import router from './router'
+import { animateOnView } from './directives/animateOnView.js';
 
 const app = createApp(App)
 const toastOptions = {
@@ -12,13 +13,14 @@ const toastOptions = {
     maxToasts: 20,
     newestOnTop: true,
     position: "bottom-right",
-    timeout: 4000,
+    timeout: 5000,
     pauseOnHover: false,
     draggable: false,
     closeOnClick: true,
     showCloseButtonOnHover: true,
 }
 
+app.directive('animation-on-view', animateOnView);
 app.use(createPinia())
 app.use(Toast, toastOptions);
 app.use(router)
