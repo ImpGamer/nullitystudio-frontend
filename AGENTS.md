@@ -1,38 +1,62 @@
-# Repository Guidelines
+## Project Context
 
-## Project Structure & Module Organization
+A TypeScript project using Vue. Contains 61 files across 18 directories. Uses monorepo, feature-based architecture.
 
-This repository is a Vue 3 application built with Vite. Application code lives in `src/`:
+## Stack
 
-- `src/pages/` contains route-level views, while `src/components/` contains reusable UI components.
-- `src/layouts/` defines shared page layouts and `src/router/` defines navigation.
-- `src/stores/` contains Pinia state, `src/api/` and `src/services/` handle remote data access, and `src/composables/` contains reusable composition logic.
-- `src/config/`, `src/types/`, and `src/utils/` hold configuration, shared types, and helpers.
-- `src/assets/` contains imported styles and assets; `public/` contains files served unchanged, including images, icons, video, and the favicon.
+**Languages:**
+- TypeScript (49%)
+- Vue (29%)
+- JavaScript (14%)
+- YAML (4%)
+- HTML (2%)
 
-Use the configured aliases such as `@components`, `@pages`, `@stores`, and `@utils` instead of long relative imports.
+**Frameworks & Tools:**
+- Vite (build)
+- Vue (web)
 
-## Build, Test, and Development Commands
+## Commands
 
-Install dependencies with `pnpm install`, then use:
+```bash
+pnpm dev  # dev
+pnpm build  # build
+pnpm preview  # preview
+pnpm lint  # lint
+pnpm format  # format
+```
 
-- `pnpm dev` starts the Vite development server with hot reload.
-- `pnpm build` runs the production build.
-- `pnpm preview` serves the built output locally for review.
-- `pnpm lint` runs ESLint and applies available fixes.
-- `pnpm format` formats files under `src/` with Prettier.
-- `pnpm type-check` runs `vue-tsc` using the project TypeScript configuration.
+## Conventions
 
-The project currently has no automated test framework or test suite configured. When adding tests, place them near the relevant module or under a clearly named `__tests__/` directory and add a package script for the chosen runner.
+- **Naming**: PascalCase
+- **File organization**: feature-based
+- **Monorepo**: Yes
+- **Config files**: tsconfig.json, jsconfig.json, eslint.config.js, .prettierrc.json
 
-## Coding Style & Naming Conventions
+## Architecture
 
-Follow the existing Prettier and ESLint configuration: two-space indentation, semicolon-free JavaScript/TypeScript, and single quotes. Use PascalCase for Vue components and page files, camelCase for variables, functions, composables, and stores, and descriptive kebab-case route paths. Keep Vue templates, script logic, and styles focused on one component or responsibility.
+**Entry points:** src/main.js, index.html
 
-## Commit & Pull Request Guidelines
+**Key directories:**
+- `public/` - Static public assets
+- `src/` - Source code
 
-Recent commits are short, imperative descriptions such as `Start point` and `Almost local store front`. Keep commits concise and focused on one change. Pull requests should explain the user-visible behavior, identify relevant pages or data flows, mention validation commands run, and include screenshots or recordings for visual changes. Do not overwrite unrelated working-tree changes.
+## Boundaries
 
-## Configuration & Data Access
+**Always:**
+- Run existing tests before committing changes
+- Run `pnpm lint` before committing
+- Follow PascalCase naming convention
+- Follow feature-based file organization
 
-Keep API and environment-specific values out of committed source. Review `src/api/`, `src/services/`, and the relevant stores together when changing remote data behavior, and verify loading and error states in the affected pages.
+**Ask first:**
+- Adding new dependencies
+- Changing project configuration files
+- Adding new packages/workspaces
+
+**Never:**
+- Commit secrets, API keys, or .env files
+- Delete or overwrite test files without understanding them
+- Force push to main/master branch
+- Make cross-package changes without checking downstream effects
+
+<!-- agentseed:meta {"sha":"1a6d4600bf48c8da6e9d2383a5627c71097c5ba6","timestamp":"2026-11-02T03:45:27.414Z","format":"agentseed-v1"} -->

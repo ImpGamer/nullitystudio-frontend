@@ -4,10 +4,9 @@
             <Logo />
             <p class="eyebrow no-signal">Lost Signal</p>
 
-            <h3 class="glitch-text" data-text="404">404</h3>
+            <h3 class="glitch-text" :data-text="statusCode">{{ statusCode }}</h3>
             <strong>This channel does not transmit anything</strong>
-            <p>The page you are looking for does not exist, has been moved, or has never been here. Check the address or
-                return to a known channel.</p>
+            <p>{{ message }}</p>
 
             <div class="btn-container">
                 <router-link class="btn btn-solid" to="/home">
@@ -17,13 +16,22 @@
                     See our Catalog
                 </router-link>
             </div>
-            <span>[ NO SIGNAL // CH 404 ]</span>
+            <span>[ NO SIGNAL // CH {{ statusCode }} ]</span>
         </div>
     </div>
 </template>
 
 <script setup>
+import { clamp } from '@/utils/functions';
 import Logo from '@components/Logo.vue';
+import { useRoute } from 'vue-router';
+const route = useRoute()
+
+const intentCode = parseInt(route.query.code)
+const statusCode = !isNaN(intentCode) ? clamp(intentCode, 400, 504) : 404;
+const message = route.query.message ?? `The page you are looking for does not exist, has been moved, or has never been here. Check the address or
+                return to a known channel.`
+
 </script>
 <style scoped>
 .hero-inner {

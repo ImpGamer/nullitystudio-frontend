@@ -23,6 +23,8 @@
   --fs-base: 0.9rem;            /* 16px */
   --fs-lg: 1.125rem;          /* 18px */
   --fs-xl: clamp(2.5rem, 5vw, 4.5rem);
+  --animate-duration: 800ms;
+  --animate-delay: 0.9s;
 }
 
 * {
@@ -85,6 +87,11 @@ h2 {
 
 button {
   font-family: inherit;
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
 }
 
 input,
@@ -285,6 +292,10 @@ textarea:focus {
 
 .no-display {
   display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 .eyebrow {
